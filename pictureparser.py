@@ -106,8 +106,8 @@ class PicasaToIPTC(object):
                         photo = self.photos.setdefault(filename, {})
                         photo.setdefault("albums", []).append(album)
             elif key == "star":
-                self.photos.setdefault(filename, {})["star"] = True
-                self.photos[filename].setdefault("albums", []).append("star")
+                photo = self.photos.setdefault(filename, {})
+                photo.setdefault("albums", []).append("star")
 
     def write_info(self):
         """Write picasa album names and star rating to photo's IPTC keywords."""
