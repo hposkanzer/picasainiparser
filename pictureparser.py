@@ -48,6 +48,10 @@ class PicasaToIPTC(object):
         if self.write:
             self.write_info()
 
+        log.info("Found %s albums:", len(self.albums))
+        for album in self.albums.values():
+            log.info(album)
+
     def scan_folder_for_inis(self, folder):
         """Return array of all picasa info files in given directory."""
         files = []
