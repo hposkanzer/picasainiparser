@@ -7,6 +7,7 @@ import pprint
 
 import configparser
 from iptcinfo import IPTCInfo
+import sys
 
 log = logging.getLogger()
 
@@ -25,6 +26,7 @@ class PicasaToIPTC(object):
     ini_name = ".picasa.ini"
     albums = {}
     photos = {}
+    errors = {}
     ini = None
 
     def __init__(self, write=False):
@@ -47,7 +49,9 @@ class PicasaToIPTC(object):
         if self.write:
             self.write_info()
 
-        print "Processed {} photos.".format(len(self.photos))
+        print "Processed {} photos with {} errors:".format(len(self.photos), len(self.errors))
+        for (filename, error) in self.errors.items():
+            print " ", filename, error
         print "Found {} albums:".format(len(self.albums))
         for album in self.albums.values():
             print "  " + album
@@ -120,7 +124,11 @@ class PicasaToIPTC(object):
             if "albums" in info:
                 photo.keywords = list(set(photo.keywords + info["albums"]))
             print "Writing {}: {}".format(filename, photo.keywords)
-            photo.save()
+            try:
+                photo.save()
+            except:
+                self.errors[filename] = sys.exc_info()[0]
+
 
 
 def main():
