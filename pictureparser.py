@@ -43,14 +43,14 @@ class PicasaToIPTC(object):
             self.parse_ini(ini)
 
         printer = pprint.PrettyPrinter(indent=2)
-        printer.pprint(self.albums)
         printer.pprint(self.photos)
         if self.write:
             self.write_info()
 
-        log.info("Found %s albums:", len(self.albums))
+        print "Processed {} photos.".format(len(self.photos))
+        print "Found {} albums:".format(len(self.albums))
         for album in self.albums.values():
-            log.info(album)
+            print "  " + album
 
     def scan_folder_for_inis(self, folder):
         """Return array of all picasa info files in given directory."""
@@ -115,11 +115,11 @@ class PicasaToIPTC(object):
 
     def write_info(self):
         """Write picasa album names and star rating to photo's IPTC keywords."""
-        for photo, info in self.photos.items():
-            photo = IPTCInfo(photo, force=True)
+        for filename, info in self.photos.items():
+            photo = IPTCInfo(filename, force=True)
             if "albums" in info:
                 photo.keywords = list(set(photo.keywords + info["albums"]))
-            print "Write: {}".format(photo.keywords)
+            print "Writing {}: {}".format(filename, photo.keywords)
             photo.save()
 
 
